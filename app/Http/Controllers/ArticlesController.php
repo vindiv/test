@@ -37,7 +37,8 @@ class ArticlesController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate([
+        //questo è il metodo standard. per eviare ripetizioni si può semplificare il tutto
+/*        request()->validate([
             'title' => 'required',
             'excerpt' => 'required',
             'body' => 'required'
@@ -48,8 +49,17 @@ class ArticlesController extends Controller
         $article->excerpt = request(('excerpt'));
         $article->body = request('body');
         $article->save();
+*/
 
-        return redirect('/articles');
+        //forma contratta. per poterla usare nel model bisogna dichiarare i campi fillable
+        Articles::create(request()->validate([
+                'title' => 'required',
+                'excerpt' => 'required',
+                'body' => 'required'
+        ]));
+
+
+        return redirect(route('articles.index'));
 
     }
 
@@ -88,7 +98,9 @@ class ArticlesController extends Controller
      */
     public function update(Request $request, Articles $articles)
     {
-        //
+        $articles->update($this->validateArtice());
+
+        return redirect($articles->path());
     }
 
     /**
