@@ -30,7 +30,10 @@ class ArticlesController extends Controller
      */
     public function create()
     {
-        return view('articles.create');
+        
+        return view('articles.create', [
+            'tags' => Tag::all()
+        ]);
     }
 
     /**
@@ -56,12 +59,24 @@ class ArticlesController extends Controller
 */
 
         //forma contratta. per poterla usare nel model bisogna dichiarare i campi fillable
-        Articles::create(request()->validate([
+        /*$article = Articles::create(request()->validate([
                 'title' => 'required',
                 'excerpt' => 'required',
                 'body' => 'required'
-        ]));
+        ]));*/ 
 
+        //creazione con metodo validate:
+        $this->validateArticle();  //valido a parte invece che in new Articles perchè tags 
+        //non fa parte della tabella articles, dopo lo inserisco a parte con l'attach
+
+        $article = new Articles(request(['title', 'excerpt', 'body']));
+        //per aggiungere l'id dell'utente che lo ha creato
+        $article->user_id = 1; //ci andrebbe auth()>id();
+        $article->save(); 
+
+        $article->tags()->attach(request('tags'));
+        
+        
 
         return redirect(route('articles.index'));
 
@@ -116,5 +131,15 @@ class ArticlesController extends Controller
     public function destroy(Articles $articles)
     {
         //
+    }
+
+    public function validateArticle()
+    {
+        return request()->validate([
+            'title' => 'required',
+            'excerpt' => 'required',
+            'body' => 'required',
+            'tags' => 'exists:tags, id'
+        ]);
     }
 }

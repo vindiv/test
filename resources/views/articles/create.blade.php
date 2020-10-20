@@ -41,6 +41,18 @@
     <div class="alert alert-danger">{{ $errors->first('body') }}</div>
     @enderror
 
+    <label for="tags">tags</label>
+    <div class="form-group">
+    <select name="tags[]">
+        @foreach ($tags as $tag)
+            <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+        @endforeach
+
+    </select>
+    </div>
+    @error('tags')
+    <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
  
 
     <!-- Send button -->

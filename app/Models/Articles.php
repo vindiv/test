@@ -27,13 +27,20 @@ class Articles extends Model
 
     public function user()
     {
-        $this->belongsTo(Users::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class)->withTimestamps();
     }
+
+
 
 
 }
