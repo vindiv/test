@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticlesController;
 
 
+//lo aggiunto io per pvovare a stampare il file
+use Illuminate\Support\Facades\File;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,6 +17,12 @@ use App\Http\Controllers\ArticlesController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+app()->bind('example', function() {
+    return new \App\Models\Example();
+});
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,3 +38,7 @@ Route::post('/articles', [ArticlesController::class, 'store']);
 Route::get('/articles/create', [ArticlesController::class, 'create']);
 ROute::get('/articles/{article}', 'App\Http\Controllers\ArticlesController@show')->name('articles.show');
 ROute::get('/articles/{article}/edit', 'App\Http\Controllers\ArticlesController@edit');
+
+Route::get('/testgetfile', function () {
+    return File::get(public_path(('robots.txt')));
+});
